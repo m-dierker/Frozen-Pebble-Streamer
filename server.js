@@ -1,4 +1,4 @@
-var Firebase = require('Firebase');
+var Firebase = require('firebase');
 var firebase = new Firebase('https://frozenpebble.firebaseio.com/');
 
 var userBase = firebase.child('users/mdierker');
