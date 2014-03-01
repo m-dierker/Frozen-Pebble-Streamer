@@ -3,11 +3,15 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 
+WATCH_PORT = 7876; // STRM (LET THE STORM RAGE OOOOOOOOON!)
+
 function SocketServer(messageCallback, onConnectedCallback) {
     this.messageCallback = messageCallback;
     this.onConnectedCallback = onConnectedCallback;
     this.connection = null;
     this.setupServer();
+
+    console.log("Watch socket server started");
 }
 
 SocketServer.prototype.setupServer = function() {
@@ -16,8 +20,8 @@ SocketServer.prototype.setupServer = function() {
         response.writeHead(404);
         response.end();
     });
-    server.listen(PORT, function() {
-        console.log((new Date()) + ' Server is listening on port ' + PORT);
+    server.listen(WATCH_PORT, function() {
+        console.log((new Date()) + ' Server is listening on port ' + WATCH_PORT);
     });
 
     wsServer = new WebSocketServer({
@@ -37,11 +41,11 @@ SocketServer.prototype.onConnection = function(connection) {
 
     connection.on('message', function(message) {
         this.messageCallback(message);
-    });
+    }.bind(this));
 
     connection.on('close', function(reasonCode, description) {
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
+    }.bind(this));
 
     this.onConnectedCallback(connection);
 };
